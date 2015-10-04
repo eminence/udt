@@ -2321,6 +2321,8 @@ int epoll_wait(int eid, set<UDTSOCKET>* readfds, set<UDTSOCKET>* writefds, int64
             break; \
          fds[count ++] = *it; \
       } \
+   } else if (num != NULL) { \
+       *num = 0; \
    }
 int epoll_wait2(int eid, UDTSOCKET* readfds, int* rnum, UDTSOCKET* writefds, int* wnum, int64_t msTimeOut,
                 SYSSOCKET* lrfds, int* lrnum, SYSSOCKET* lwfds, int* lwnum)
