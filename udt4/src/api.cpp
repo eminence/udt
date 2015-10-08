@@ -1118,6 +1118,14 @@ int CUDTUnited::epoll_remove_usock(const int eid, const UDTSOCKET u)
    {
       s->m_pUDT->removeEPoll(eid);
    }
+   else
+   {
+      // if this socket doesn't exist, we must remove it from the list of sockets with events
+      // if we don't, it'll be reported everytime we call wait()
+      set<int> remove;
+      remove.insert(eid);
+      m_EPoll.update_events(u, remove, UDT_EPOLL_IN | UDT_EPOLL_OUT | UDT_EPOLL_ERR, false);
+   }
    //else
    //{
    //   throw CUDTException(5, 4);

@@ -103,6 +103,8 @@ int CEPoll::add_usock(const int eid, const UDTSOCKET& u, const int* events)
       p->second.m_sUDTSocksIn.insert(u);
    if (!events || (*events & UDT_EPOLL_OUT))
       p->second.m_sUDTSocksOut.insert(u);
+   if (!events || (*events & UDT_EPOLL_ERR))
+      p->second.m_sUDTSocksEx.insert(u);
 
    return 0;
 }
@@ -351,11 +353,11 @@ int CEPoll::update_events(const UDTSOCKET& uid, std::set<int>& eids, int events,
       }
       else
       {
-         if ((events & UDT_EPOLL_IN) != 0)
+         if ((events & UDT_EPOLL_IN) == UDT_EPOLL_IN)
             update_epoll_sets(uid, p->second.m_sUDTSocksIn, p->second.m_sUDTReads, enable);
-         if ((events & UDT_EPOLL_OUT) != 0)
+         if ((events & UDT_EPOLL_OUT) == UDT_EPOLL_OUT)
             update_epoll_sets(uid, p->second.m_sUDTSocksOut, p->second.m_sUDTWrites, enable);
-         if ((events & UDT_EPOLL_ERR) != 0)
+         if ((events & UDT_EPOLL_ERR) == UDT_EPOLL_ERR)
             update_epoll_sets(uid, p->second.m_sUDTSocksEx, p->second.m_sUDTExcepts, enable);
       }
    }
